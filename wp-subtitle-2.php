@@ -69,7 +69,7 @@ class WPSubtitle2 {
 	 */
 	function save_post( $post_id ) {
 		// Verify nonce
-		if ( !wp_verify_nonce( $_POST['wps_noncename'], 'wp-subtitle' ) )
+		if ( isset( $_POST['wps_noncename'] ) && !wp_verify_nonce( $_POST['wps_noncename'], 'wp-subtitle' ) )
 			return $post_id;
 		
 		// Check edit capability
@@ -79,7 +79,7 @@ class WPSubtitle2 {
 			'public'   => true,
 			'_builtin' => false
 		), 'objects' );
-		if ( in_array( $_POST['post_type'], $post_types ) ) {
+		if ( isset( $_POST['post_type'] ) && in_array( $_POST['post_type'], $post_types ) ) {
 			if ( 'page' == $_POST['post_type'] && current_user_can( 'edit_page', $post_id ) )
 				$abort = false;
 			elseif ( 'post' == $_POST['post_type'] && current_user_can( 'edit_post', $post_id ) )
