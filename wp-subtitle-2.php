@@ -69,6 +69,11 @@ class WPSubtitle2 {
 	 * Save Subtitle
 	 */
 	function save_post( $post_id ) {
+		// Verify if this is an auto save routine. 
+		// If it is our form has not been submitted, so we dont want to do anything
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+			return;
+			
 		// Verify nonce
 		if ( isset( $_POST['wps_noncename'] ) && !wp_verify_nonce( $_POST['wps_noncename'], 'wp-subtitle' ) )
 			return $post_id;
