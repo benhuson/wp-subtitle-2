@@ -51,7 +51,8 @@ class WPSubtitle2 {
 	function add_meta_boxes() {
 		$post_types = $this->get_supported_post_types();
 		foreach ( $post_types as $post_type ) {
-			add_meta_box( 'wps_subtitle_panel', 'Subtitle', array( $this, 'add_subtitle_meta_box' ), $post_type, 'normal', 'high' );
+			$meta_box_title = apply_filters( 'wps_meta_box_title', 'Subtitle' );
+			add_meta_box( 'wps_subtitle_panel', __( $meta_box_title ), array( $this, 'add_subtitle_meta_box' ), $post_type, 'normal', 'high' );
 		}
 	}
 	
