@@ -157,7 +157,7 @@ function the_subtitle( $before = '', $after = '', $echo = true ) {
  */
 function get_the_subtitle( $id = 0 ) {
 	global $WPSubtitle2;
-	$WPSubtitle2->get_the_subtitle( $id );
+	return $WPSubtitle2->get_the_subtitle( $id );
 }
 
 ?>
