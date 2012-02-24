@@ -82,7 +82,6 @@ class WPSubtitle2 {
 		$abort = true;
 		$post_types = $this->get_supported_post_types();
 		$post_types_obj = (array) get_post_types( array(
-			'public'   => true,
 			'_builtin' => false
 		), 'objects' );
 		if ( isset( $_POST['post_type'] ) && in_array( $_POST['post_type'], $post_types ) ) {
