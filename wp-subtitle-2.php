@@ -63,6 +63,7 @@ class WPSubtitle2 {
 		global $post;
 		echo '<input type="hidden" name="wps_noncename" id="wps_noncename" value="' . wp_create_nonce( 'wp-subtitle' ) . '" />
 			<input type="text" id="wpsubtitle" name="wps_subtitle" value="' . get_post_meta( $post->ID, 'wps_subtitle', true ) . '" style="width:99%;" />';
+		echo apply_filters( 'wps_subtitle_field_description', '' );
 	}
 	
 	/**
