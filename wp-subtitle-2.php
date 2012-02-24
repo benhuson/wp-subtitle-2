@@ -5,7 +5,7 @@ Plugin Name: WP Subtitle 2
 Plugin URI: https://github.com/benhuson/WP-Subtitle-2
 Description: Add a subtitle to pages and posts. Based on the functionality of the <a href="http://www.husani.com/ventures/wordpress-plugins/wp-subtitle/">WP Subtitle</a> plugin, this plugin is completely re-coded to work with WordPress 3.0+ including support for custom post types.
 Author: Ben Huson
-Version: 1.0
+Version: 1.1
 */
 
 /*
@@ -105,7 +105,6 @@ class WPSubtitle2 {
 	 */
 	function get_supported_post_types() {
 		$args = array(
-			'public'   => true,
 			'_builtin' => false
 		);
 		$post_types = (array) get_post_types( $args );
