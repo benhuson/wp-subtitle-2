@@ -5,25 +5,9 @@ Plugin Name: WP Subtitle 2
 Plugin URI: https://github.com/benhuson/WP-Subtitle-2
 Description: Add a subtitle to pages and posts. Based on the functionality of the <a href="http://www.husani.com/ventures/wordpress-plugins/wp-subtitle/">WP Subtitle</a> plugin, this plugin is completely re-coded to work with WordPress 3.0+ including support for custom post types.
 Author: Ben Huson
+Author URI: http://www.benhuson.co.uk/
 Version: 1.1
-*/
-
-/*
-Copyright 2011 Ben Huson
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+License: GPLv2 or later
 */
 
 class WPSubtitle2 {
@@ -62,7 +46,7 @@ class WPSubtitle2 {
 	function add_subtitle_meta_box() {
 		global $post;
 		echo '<input type="hidden" name="wps_noncename" id="wps_noncename" value="' . wp_create_nonce( 'wp-subtitle' ) . '" />
-			<input type="text" id="wpsubtitle" name="wps_subtitle" value="' . get_post_meta( $post->ID, 'wps_subtitle', true ) . '" style="width:99%;" />';
+			<input type="text" id="wpsubtitle" name="wps_subtitle" value="' . $this->_get_post_meta( $post->ID ) . '" style="width:99%;" />';
 		echo apply_filters( 'wps_subtitle_field_description', '' );
 	}
 	
@@ -97,7 +81,7 @@ class WPSubtitle2 {
 			return $post_id;
 		
 		// Save data
-		update_post_meta( $post_id, 'wps_subtitle', $_POST['wps_subtitle'] );
+		update_post_meta( $post_id, '_wps_subtitle', $_POST['wps_subtitle'] );
 	}
 	
 	/**
@@ -124,8 +108,23 @@ class WPSubtitle2 {
 	function get_the_subtitle( $id = 0 ) {
 		global $post;
 		$id = $id == 0 ? $post->ID : (int) $id;
-		$subtitle = get_post_meta( $id, 'wps_subtitle', true );
+		$subtitle = $this->_get_post_meta( $id );
 		return apply_filters( 'the_subtitle', $subtitle, $id );
+	}
+	
+	/**
+	 * Get Post Meta
+	 */
+	function _get_post_meta( $id = 0 ) {
+		global $post;
+		$id = $id == 0 ? $post->ID : (int) $id;
+		$subtitle = get_post_meta( $id, '_wps_subtitle', true );
+
+		// Back-compat
+		if ( empty( $subtitle ) )
+			$subtitle = get_post_meta( $id, 'wps_subtitle', true );
+
+		return $subtitle;
 	}
 	
 }
@@ -158,5 +157,3 @@ function get_the_subtitle( $id = 0 ) {
 	global $WPSubtitle2;
 	return $WPSubtitle2->get_the_subtitle( $id );
 }
-
-?>
