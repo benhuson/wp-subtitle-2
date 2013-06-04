@@ -6,16 +6,19 @@ Plugin URI: https://github.com/benhuson/WP-Subtitle-2
 Description: Add a subtitle to pages and posts. Based on the functionality of the <a href="http://www.husani.com/ventures/wordpress-plugins/wp-subtitle/">WP Subtitle</a> plugin, this plugin is completely re-coded to work with WordPress 3.0+ including support for custom post types.
 Author: Ben Huson
 Author URI: http://www.benhuson.co.uk/
-Version: 1.1
+Version: 1.2
 License: GPLv2 or later
 */
 
 class WPSubtitle2 {
-	
+
+	var $version = '1.2';
+
 	/**
 	 * Constructor
 	 */
 	function WPSubtitle2() {
+		add_action( 'init', array( $this, '_upgrade' ), 5 );
 		add_action( 'init', array( $this, 'default_post_type_support' ), 5 );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_post' ) );
@@ -121,12 +124,44 @@ class WPSubtitle2 {
 		$subtitle = get_post_meta( $id, '_wps_subtitle', true );
 
 		// Back-compat
-		if ( empty( $subtitle ) )
+		if ( empty( $subtitle ) && version_compare( $this->version, '1.2', '<' ) )
 			$subtitle = get_post_meta( $id, 'wps_subtitle', true );
 
 		return $subtitle;
 	}
-	
+
+	/**
+	 * Maybe Upgrade
+	 */
+	function _maybe_upgrade() {
+		$current_version = get_option( 'wp_subtitle_2_version', 0 );
+		if ( version_compare( $current_version, $this->version, '>=' ) )
+			return false;
+		return true;
+	}
+
+	/**
+	 * Upgrade
+	 */
+	function _upgrade() {
+		global $wpdb;
+
+		// Check if upgrade required
+		if ( ! $this->_maybe_upgrade() )
+			return;
+
+		$current_version = get_option( 'wp_subtitle_2_version', 0 );
+
+		// 1.2 Upgrade
+		// Change 'wps_subtitle' meta key to '_wps_subtitle'
+		if ( version_compare( $current_version, '1.2', '<' ) ) {
+			$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->postmeta SET meta_key = %s WHERE meta_key = %s", '_wps_subtitle', 'wps_subtitle' ) );
+		}
+
+		// Log upgrade
+		update_option( 'wp_subtitle_2_version', $this->version );
+	}
+
 }
 
 global $WPSubtitle2;
